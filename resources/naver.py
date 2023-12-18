@@ -49,3 +49,33 @@ class ChineseResource(Resource) :
 
         return {"result" : "success" ,
                 "chinese" : chinese}, 200
+    
+
+class NewsResource(Resource) :
+
+    def get(self) :
+
+        query = request.args.get('query')
+
+        
+    # 네이버 뉴스 검색 API 를 호출
+        
+        query_string = {'query' : query,
+                        'display' : 30,
+                        'sort' : 'date' }
+
+        req_header = { "X-Naver-Client-Id" : "24q0xj6Ca8KwNEoUmZAM",
+                      "X-Naver-Client-Secret" : "fO6Ih4cylA"}
+
+        response = requests.get("https://openapi.naver.com/v1/search/news.json",
+                     query_string,
+                     headers= req_header)
+        # 리스판스는 json 으로 해줘야 한다.
+        response = response.json()
+
+        return {'result' : 'success', 
+                'items' : response['items'],
+                'count' : len(response['items']) },200
+
+
+
